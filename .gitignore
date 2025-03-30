@@ -1,1 +1,4 @@
 repo/
+htmlFE/node_modules
+pythonAPI/__pycache__/
+pythonAPI/secAlg.py

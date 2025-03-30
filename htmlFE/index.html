@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wing Queue by Swider</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    .que-number, .waiting-time {
+      font-size: 20px;
+    }
+    .valentines-special{
+    color: pink;
+    font-size: 15;
+    }
+
+
+    .que-time-number {
+      color: red;
+      font-size: 80px;
+      margin: 10px 0;
+    }
+
+   .big-number {
+      font-size: 80px;
+      margin: 10px 0;
+    }
+   
+    .faq {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      a {
+        color: gray;
+      }
+     .statusOnline {
+        color: #00ff00;
+      }
+    .statusOffline {
+        color: red;
+      }
+    }
+
+
+img {
+  padding: 5px;
+  width: 15px;
+}
+    .waiting-time {
+      color: red;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="que-number">
+      <span>Queue number</span>
+    </div>
+    <div class="big-number">
+      <span id="queNum">0</span>
+    </div>
+    <div class="waiting-time">
+      <span>Waiting time</span>
+    </div>
+    <div class="que-time-number">
+      <span id="waitNum">0</span>
+    </div>
+
+      
+    </div>
+<div class="faq">
+      <span><h3><a href="https://siibs.swider.dev/changes">V. 1.2: now 4x faster</a> | <a href="https://siibs.swider.dev/faq">FAQ</a> |  <b id="statusTag" class="statusOffline" >Disconnected</b></h3></span>
+    </div>
+
+</body>
+<script src="script.js"></script>
+</html>
+

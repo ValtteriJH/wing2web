@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ</title>
+    <style>
+       body {
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+        h2 {
+            color: red;
+        }
+
+        h1 {
+        }
+        .versionNumber {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <h1>Incoming changes</h1>
+    <div class="versionNumber">
+        <h2>V1.3</h2>
+                <p>Update initial git</p>
+                <p>Add CI/CD for datasource</p>
+    </div>
+     <div class="versionNumber">
+        <h2>Mby someday</h2>
+                <p>Deployment pipeline for server</p>
+                <p>Containerize services</p>
+                <p>Add a ping my wings feature</p>
+                <p>Do websockets instead of SSE because its fun</p>
+    </div>   
+    <h1>Previous changes</h1>
+    <div class="versionNumber">
+        <h2>V1.2</h2>
+                <p>Optimize datasource -> faster response & more stable: response time now 4x faster ~10-20s</p>
+    </div>
+    <div class="versionNumber">
+        <h2>V1.1.1</h2>
+        <p>Add internal timeout function in case there is lost heartbeats, but the connection still stands</p>
+    </div>
+    <h2>V1.1.0</h2>
+            <p>Good feedback from users:</br> - I didnt notice the monitor disconnects and is unreliable, now missed updates shouldn't matter, and you can see your connection status on the front page. </br> - Feedback is also now easier to give, it was a bit hidden last time around. Let me know if you have any other suggestions or issues, contact info is in the FAQ page 👍</p>
+       <p>Move away from dynamic SSE to heartBeat updates for more reliable UI</p>
+       <p>Add a status monitor for clarity</p>
+    <div class="versionNumber">
+        <h2>V1.0.2</h2>
+        <p>Rm Valentine's, make page more clear, add version visibility</p>
+    </div>
+    <div class="versionNumber">
+        <h2>V1.0.1</h2>
+        <p>Valentine's update, add FAQ, RickRoll the entire school because I unironically also like the song</p>
+    </div>
+    <div class="versionNumber">
+        <h2>V1.0</h2>
+        <p>Initial launch, setup the data source, make everything just work</p>
+    </div>
+  </div>
+</body>
+</html>
+
