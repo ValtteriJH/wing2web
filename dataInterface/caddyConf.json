@@ -1,7 +1,0 @@
-siibs.swider.dev {
-	reverse_proxy server:8889
-}
-
-analytics.siibs.swider.dev {
-	reverse_proxy playsible:8000
-}
