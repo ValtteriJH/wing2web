@@ -8,6 +8,10 @@ from dotenv import load_dotenv
 
 from secAlg import getSecret
 
+import cv2
+
+
+
 # Load .env file
 load_dotenv()
 
@@ -27,8 +31,23 @@ def post(a,b, secret):
 engine = RapidOCR()
 
 imgs = [IMGPATH]
-img = imgs[0]
-result, elapse = engine(img)
+imgpath = imgs[0]
+
+
+# DOWNSAMPLE
+img = cv2.imread(imgpath)
+
+img = cv2.pyrDown(img)
+
+# Convert the image to grayscale
+#img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+# Save the grayscale image
+cv2.imwrite(imgpath, img)
+
+
+
+result, elapse = engine(imgpath)
 outputs = []
 valid = False
 print(result)
