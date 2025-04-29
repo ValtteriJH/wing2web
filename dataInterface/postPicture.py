@@ -3,8 +3,17 @@ from rapidocr_onnxruntime import RapidOCR
 import requests
 import sys
 import hashlib
+import os
+from dotenv import load_dotenv
 
 from secAlg import getSecret
+
+# Load .env file
+load_dotenv()
+
+# Access environment variables
+IMGPATH = os.getenv("IMGPATH")
+
 
 def post(a,b, secret):
     response = requests.post(
@@ -17,7 +26,7 @@ def post(a,b, secret):
 
 engine = RapidOCR()
 
-imgs = ['/home/*****/Downloads/siibiRepo/testPics/curImg.jpg']
+imgs = [IMGPATH]
 img = imgs[0]
 result, elapse = engine(img)
 outputs = []
@@ -25,7 +34,7 @@ valid = False
 print(result)
 for i in result:
     if len(i[1]) < 3 and len(i[1]) > 0:
-        if i[1] != '?':
+        if i[1] != '?' and i[0] != 'N':
             outputs.append(i[1])
 
 if len(outputs) == 2:
@@ -36,7 +45,7 @@ if valid:
     a = outputs[0]
     b = outputs[1]
 
-    secret = getSecret([a,b])
+    secret = getSecret(a,b)
 
     post(a,b, secret)
 

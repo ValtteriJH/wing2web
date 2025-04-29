@@ -1,4 +1,8 @@
 repo/
 htmlFE/node_modules
 pythonAPI/__pycache__/
-pythonAPI/secAlg.py
+secAlg.py
+getSecret.py
+
+dataInterface/__pycache__/
+.env
