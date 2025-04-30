@@ -13,6 +13,8 @@ bot = telebot.TeleBot(Bot_Token)
 
 number = 0
 
+orderList = {}
+
 #bot.setBotMenuButton(True)
 
 @bot.message_handler(commands=['start','hello'])
@@ -40,80 +42,31 @@ def send_queue_status(message):
 
     bot.reply_to(message,f"Order number: {body[0]}, Wait time: {body[1]}")
 
-@bot.message_handler(commands=['test'])
+@bot.message_handler(commands=['myWings'])
 def send_queue_status(message):
 
-    sleep(5)
-    bot.reply_to(message,f"Number is {2}")
+    order = message.text.split(" ")
+
+    if len(order) == 2:
+        order = order[1]
+        chatId = message.from_user.id
+        if chatId not in orderList:
+            orderList[chatId] = order
+
+        requests.post('api.swider.dev/orders', [])
+        bot.reply_to(message,f"{order[1]}")
+    else:
+        bot.reply_to(message,f"Invalid command")
+
+
+@bot.fwdCombo(message)
+def echo_all(message):
+    bot.reply_to(message, f'Order ready!')
+
 
 @bot.message_handler(func=lambda msg: True)
 def echo_all(message):
     bot.reply_to(message, message.text)
 
-# This approach didnt work
-#@bot.message_handler(commands=['test'])
-#async def send_queue_status(message):
-#    rounds = 0
-#    while True:
-#        response = requests.get('https://api.swider.dev')
-#
-#        body = response.text
-#        body = body[1:-2]
-#        body = body.replace("\"", "")
-#        body = body.split(" ")
-#
-#        bot.reply_to(message,f"Order number: {body[0]}, Wait time: {body[1]}")
-#
-#        await sleep(3)  # Send heartbeat every 3 seconds
-#        rounds += 1
-#        if rounds > 5:
-#            break
-
-
-#@bot.message_handler(commands=['queue', 'Queue', 'que', 'Que'])
-#def send_welcome(message):
-#    # Create a Curl object
-#    # Perform the request
-#    # Retrieve the response
-#
-#    storage = StringIO()
-#    url = 'https://api.swider.dev'
-#
-#    c = pycurl.Curl()
-#    c.setopt(c.URL, url)
-#    c.setopt(c.WRITEFUNCTION, storage.write)
-#    c.perform()
-#
-##    response = c.getinfo(pycurl.RESPONSE_CODE)
-#
-#    c.close()
-#    content = storage.getvalue()
-#
-#    bot.reply_to(message,f"Queue status: {content}")
-
-# This approach didnt work
-# async def event_generator(message):
-#     rounds = 0
-#     print('works')
-#     while True:
-#         response = requests.get('https://api.swider.dev')
-# 
-#         body = response.text
-#         body = body[1:-2]
-#         body = body.replace("\"", "")
-#         body = body.split(" ")
-# 
-#         bot.reply_to(message,f"Order number: {body[0]}, Wait time: {body[1]}")
-#         #yield 'data: {"type": "heartbeat"}\n\n'
-#         await sleep(3)  # Send heartbeat every 3 seconds
-#         rounds += 1
-#         print(rounds)
-#         if rounds > 3:
-#             break
-# 
-# #@app.get('/stream')
-# @bot.message_handler(commands=['test'])
-# def message_stream(message):
-#     await event_generator(message)
 
 bot.infinity_polling()
