@@ -25,7 +25,6 @@ def post(a,b, secret):
         json={'crypt': secret
         }
     )
-    
     print(response.content)
 
 engine = RapidOCR()

@@ -84,7 +84,7 @@ async def giveNumber():
 #    myCurrentState = copy.copy(initial_values) Add data to a heartbeat. 
     while True:
         yield f"event: locationUpdate\ndata: {initial_values}\n\n"
-        await sleep(10)
+        await sleep(2)
 #        if (myCurrentState != initial_values):
         #myCurrentState = copy.copy(initial_values)
 

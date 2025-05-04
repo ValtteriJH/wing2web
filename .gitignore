@@ -3,6 +3,7 @@ htmlFE/node_modules
 pythonAPI/__pycache__/
 secAlg.py
 getSecret.py
+sendMsg.py
 
 dataInterface/__pycache__/
 .env
