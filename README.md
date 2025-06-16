@@ -1,4 +1,4 @@
-## Interface for getting the Queue status of university restaurant to online
+## Interface for getting the Queue status of university restaurant online
 
 #### Current status
 
