@@ -1,20 +1,33 @@
+import os
 from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 from fastapi.responses import StreamingResponse
 
-import uvicorn
-
+from fastapi.middleware.cors import CORSMiddleware
 from asyncio import sleep
-
 import copy
+
 import json
 import requests
+
 import hashlib
 
-from secAlg import getSecret 
+from secAlg import getSecret
 
+import logging
+
+logger = logging.getLogger('uvicorn.error')
+logger.setLevel(logging.DEBUG)
+
+global wingRequests
+wingRequests = {}
+
+def get_hash(string:str):
+    return hashlib.sha256(string.encode("utf-8")).hexdigest()
 
 app = FastAPI()
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -51,6 +64,44 @@ with open('curState.txt', 'r') as file:
 async def get_secret(request: Request):
     return await request.json()#
 
+
+@app.post("/queueNotification")
+async def update_values(request: Request):
+
+    body = await request.json()
+    orderString = body['order']
+    parts = orderString.split(' ')
+
+    if len(parts) != 2:
+        return
+    chatID, orderNumber = parts
+
+
+    body = await get_secret(request)
+    secret = body['crypt']
+
+    msg_secret = getSecret([str(chatID),str(orderNumber)])
+
+
+    if secret != msg_secret:
+        print("Incorrect secret")
+        return {"message": "Incorrect secret"}
+  
+    orderNumber = orderNumber.strip()
+    if not orderNumber.isnumeric():
+        return
+
+    orderNumber = int(orderNumber)
+    if orderNumber >= 100:
+        return {"message": "Faulty number", "order_value": orderNumber}
+
+    if orderNumber not in wingRequests:
+        wingRequests[orderNumber]=[]
+
+    wingRequests[orderNumber].append(chatID)
+
+    return {"message": "Chat Id received", "order_value": orderNumber}
+
 @app.post("/add")
 async def update_values(request: Request, text: str):
 
@@ -60,40 +111,46 @@ async def update_values(request: Request, text: str):
     if len(text)> 0:
         text = "".join(char for char in text if char.isalnum() or char == " ")
         if len(text) < 1000000000000:
-            targets = text.split(' ')
-
-            if len(targets) == 2:
-                key = targets[0] + targets[1] + 2*targets[0] + 2*targets[1]
-                msg_secret = getSecret(targets)
-
+            test = text.split(' ')
+            if len(test) == 2:
+                msg_secret = getSecret([test[0],test[1]])
                 if secret == msg_secret:
+
+                    new = test[0]
+                    curVals = initial_values.split(' ')
+                    old = curVals[0]
+
+                    processQue(old,new)
+
                     initial_values = text
                     with open("curState.txt", "wt") as f:
                         f.write(f"{initial_values}")
-
-                    #giveNumber()
                     return {"message": "Numbers updated", "current_values": initial_values}
                 else:
                     return {f"Invalid request"}
 
-@app.get("/get-numbers")
-async def root():
-    return StreamingResponse(giveNumber(), media_type="text/event-stream")
+def processQue(old, new):
+    Bot_Token = os.environ.get('BOT_TOKEN')
+    token = Bot_Token
+    old = int(old)
+    new = int(new)
+    if old > new:
+        new = 100 + new
 
-async def giveNumber():
-#    myCurrentState = copy.copy(initial_values) Add data to a heartbeat. 
-    while True:
-        yield f"event: locationUpdate\ndata: {initial_values}\n\n"
-        await sleep(10)
-#        if (myCurrentState != initial_values):
-        #myCurrentState = copy.copy(initial_values)
+    logger.debug(f'Processing the thing from {old} to {new}')
+    logger.debug(f'all orders in system: {wingRequests.keys()}')
+    for curNum in range(old,new+1):
+        queNum = curNum % 100
+
+        if queNum in wingRequests.keys():
+            for chatterID in wingRequests[queNum]:
+                url = f"https://api.telegram.org/bot{token}/sendMessage"
+                text = f'Your order ({queNum}) is ready for pickup!'
+                params = {"chat_id": chatterID, "text": text}
+                response = requests.post(url, data=params)
+            wingRequests[queNum] = []
+
 
 @app.get("/")
 async def read_root(request: Request):
    return {initial_values}
-
-@app.get("/items/{item_id}")
-async def read_item(item_id: int, q: str = None):
-    return {"item_id": item_id, "q": q}
-
-
